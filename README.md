@@ -12,7 +12,7 @@ http://<HA-IP>:8123/dashboard-gewitter/gewitter
 
 - GW1-Schaltausgänge über Shelly UNI erfassen
 - Warnstatus in Home Assistant als klare Sensoren darstellen
-- Dashboard für Gewitterstatus, letzte Änderung und Shelly-Verbindung bereitstellen
+- Dashboard für GW1-Status, Blitzrate, Tageszähler und Blitzortung-Umgebung bereitstellen
 - Benachrichtigungen und Automationen als Vorlage versionieren
 
 ## Projektstruktur
@@ -48,6 +48,11 @@ Die oeffentlichen YAML-Dateien verwenden anonymisierte Platzhalter:
 - `binary_sensor.gw1_shelly_uni_input_1`
 - `sensor.gw1_shelly_uni_pulse_counter`
 - `sensor.gw1_shelly_uni_pulse_frequency`
+- `sensor.gw1_lightning_rate`
+- `sensor.gw1_lightning_daily`
+- `sensor.blitzortung_lightning_distance`
+- `sensor.blitzortung_lightning_azimuth`
+- `sensor.blitzortung_lightning_counter`
 - `switch.gw1_shelly_uni_output_0`
 - `switch.gw1_shelly_uni_output_1`
 - `device_tracker.gw1_shelly_uni`
@@ -56,6 +61,13 @@ Die oeffentlichen YAML-Dateien verwenden anonymisierte Platzhalter:
 - `notify.mobile_app_your_phone`
 
 Echte lokale Entitaeten gehoeren in ignorierte private Dateien unter `local/`.
+
+## Dashboard-Aufbau
+
+Die Dashboard-Vorlage bildet zwei Bereiche ab:
+
+- **GW1 (eigener Sensor)**: Gewitterwarnung, Entwarnung, Blitze heute, Blitzrate, Verlauf.
+- **Umgebung & amtliche Warnung**: Blitzortung-Distanz, Azimut, Zaehler und Karte.
 
 ## Sicherheit
 

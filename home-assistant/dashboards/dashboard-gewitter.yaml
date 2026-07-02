@@ -7,39 +7,100 @@ title: Gewitter
 path: gewitter
 icon: mdi:weather-lightning
 cards:
-  - type: entities
-    title: Gewitterwarner GW1
-    show_header_toggle: false
-    entities:
-      - entity: binary_sensor.gewitterwarnung
-        name: Warnung
-      - entity: sensor.gewitterwarnung_status
-        name: Status
-      - entity: sensor.gewitterwarnung_letzte_aenderung
-        name: Letzte Aenderung
-      - type: divider
-      - entity: binary_sensor.gw1_shelly_uni_input_0
-        name: Shelly Eingang 1 roh
-      - entity: binary_sensor.gw1_shelly_uni_input_1
-        name: Shelly Eingang 2 roh
-      - entity: sensor.gewitterwarner_impulse
-        name: Impulse
-      - entity: sensor.gewitterwarner_impulsfrequenz
-        name: Impulsfrequenz
+  - type: grid
+    columns: 2
+    square: false
+    cards:
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: "### GW1 (eigener Sensor)"
 
-  - type: glance
-    title: Shelly UNI
-    entities:
-      - entity: device_tracker.gw1_shelly_uni
-        name: Online
-      - entity: update.gw1_shelly_uni_firmware
-        name: Firmware
-      - entity: switch.gw1_shelly_uni_internet_access
-        name: Internetzugang
+          - type: entities
+            title: Status
+            show_header_toggle: false
+            entities:
+              - entity: binary_sensor.gewitterwarnung
+                name: Gewitterwarnung
+                icon: mdi:weather-lightning
+              - entity: binary_sensor.entwarnung
+                name: Entwarnung
+                icon: mdi:weather-sunny-alert
+              - type: divider
+              - entity: sensor.gewitterwarner_blitze_heute
+                name: Blitze heute
+                icon: mdi:counter
+              - entity: sensor.gewitterwarner_blitzrate
+                name: Blitze pro Minute
+                icon: mdi:speedometer
 
-  - type: markdown
-    title: Hinweise
-    content: >-
-      Ersetze die anonymisierten Entity-Platzhalter durch deine lokalen
-      Home-Assistant-Entity-IDs. Pruefe danach, ob die Logik des GW1-Eingangs
-      invertiert werden muss.
+          - type: grid
+            columns: 2
+            square: false
+            cards:
+              - type: gauge
+                entity: sensor.gewitterwarner_blitzrate
+                name: Blitzrate
+                min: 0
+                max: 10
+                severity:
+                  green: 0
+                  yellow: 1
+                  red: 5
+              - type: gauge
+                entity: sensor.gewitterwarner_blitze_heute
+                name: Blitze heute
+                min: 0
+                max: 500
+                severity:
+                  green: 0
+                  yellow: 50
+                  red: 150
+
+          - type: history-graph
+            title: Blitzverlauf (24 h)
+            hours_to_show: 24
+            entities:
+              - entity: sensor.gewitterwarner_blitze_heute
+                name: Blitze kumuliert
+
+      - type: vertical-stack
+        cards:
+          - type: markdown
+            content: "### Umgebung & amtliche Warnung"
+
+          - type: entities
+            title: Blitzortung - Umgebung
+            show_header_toggle: false
+            entities:
+              - entity: sensor.blitzortung_lightning_counter
+                name: Blitze Umgebung
+                icon: mdi:weather-lightning
+              - entity: sensor.blitzortung_lightning_distance
+                name: Entfernung
+                icon: mdi:map-marker-distance
+              - entity: sensor.blitzortung_lightning_azimuth
+                name: Richtung
+                icon: mdi:compass
+
+          # Optional: Wenn die HACS "Blitzortung Lightning Card" installiert ist,
+          # kann diese Karte statt der Entities-Karte genutzt werden. Die genauen
+          # Optionen haengen von der installierten Card-Version ab.
+          #
+          # - type: custom:blitzortung-lightning-card
+          #   distance_entity: sensor.blitzortung_lightning_distance
+          #   counter_entity: sensor.blitzortung_lightning_counter
+          #   azimuth_entity: sensor.blitzortung_lightning_azimuth
+
+          - type: map
+            title: Karte
+            default_zoom: 12
+            entities:
+              - zone.home
+
+          - type: markdown
+            title: Hinweise
+            content: >-
+              Ersetze die anonymisierten Entity-Platzhalter durch deine lokalen
+              Home-Assistant-Entity-IDs. Pruefe danach, ob die Logik des
+              GW1-Eingangs invertiert werden muss.

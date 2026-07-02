@@ -8,6 +8,11 @@ Trage echte Home-Assistant-Entity-IDs nur lokal in eine private, ignorierte Date
 | GW1 Warnkontakt 2 | `binary_sensor.gw1_shelly_uni_input_1` |  | optionaler zweiter Status |
 | Impulszaehler | `sensor.gw1_shelly_uni_pulse_counter` |  | optional, Zaehlimpulse |
 | Impulsfrequenz | `sensor.gw1_shelly_uni_pulse_frequency` |  | optional |
+| Blitzrate | `sensor.gw1_lightning_rate` |  | Blitze pro Minute |
+| Blitze heute | `sensor.gw1_lightning_daily` |  | Tageszaehler |
+| Blitzortung Distanz | `sensor.blitzortung_lightning_distance` |  | Umgebung / Blitzortung.org |
+| Blitzortung Azimut | `sensor.blitzortung_lightning_azimuth` |  | Richtung |
+| Blitzortung Zaehler | `sensor.blitzortung_lightning_counter` |  | Umgebung / Blitzortung.org |
 | Shelly Output 0 | `switch.gw1_shelly_uni_output_0` |  | nicht fuer Warnlogik verwendet |
 | Shelly Output 1 | `switch.gw1_shelly_uni_output_1` |  | nicht fuer Warnlogik verwendet |
 | Shelly Online | `device_tracker.gw1_shelly_uni` |  | Verfuegbarkeit im Netzwerk |

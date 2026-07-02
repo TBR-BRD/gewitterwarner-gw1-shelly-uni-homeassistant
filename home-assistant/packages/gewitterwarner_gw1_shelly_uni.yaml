@@ -5,6 +5,8 @@
 # - binary_sensor.gw1_shelly_uni_input_1
 # - sensor.gw1_shelly_uni_pulse_counter
 # - sensor.gw1_shelly_uni_pulse_frequency
+# - sensor.gw1_lightning_rate
+# - sensor.gw1_lightning_daily
 # - notify.mobile_app_your_phone
 #
 # Wichtig: Pruefen, ob die GW1-Logik invertiert werden muss.
@@ -25,13 +27,13 @@ template:
           quelle: "Gewitterwarner GW1 via Shelly UNI"
           raw_input_entity: "binary_sensor.gw1_shelly_uni_input_0"
 
-      - name: "Gewitterwarner zweiter Eingang"
-        unique_id: gewitterwarner_gw1_input_2
+      - name: "Entwarnung"
+        unique_id: gewitterwarner_gw1_entwarnung
         device_class: safety
         state: "{{ is_state('binary_sensor.gw1_shelly_uni_input_1', 'on') }}"
-        icon: mdi:electric-switch
+        icon: mdi:weather-sunny-alert
         attributes:
-          quelle: "Shelly UNI Eingang 2"
+          quelle: "Gewitterwarner GW1 via Shelly UNI"
           raw_input_entity: "binary_sensor.gw1_shelly_uni_input_1"
 
   - sensor:
@@ -74,6 +76,18 @@ template:
         state: "{{ states('sensor.gw1_shelly_uni_pulse_frequency') }}"
         unit_of_measurement: "Hz"
         icon: mdi:sine-wave
+
+      - name: "Gewitterwarner Blitzrate"
+        unique_id: gewitterwarner_gw1_blitzrate
+        state: "{{ states('sensor.gw1_lightning_rate') }}"
+        unit_of_measurement: "pulse/min"
+        icon: mdi:speedometer
+
+      - name: "Gewitterwarner Blitze heute"
+        unique_id: gewitterwarner_gw1_blitze_heute
+        state: "{{ states('sensor.gw1_lightning_daily') }}"
+        unit_of_measurement: "pulse"
+        icon: mdi:counter
 
 automation:
   - id: gewitterwarner_gw1_warnung_aktiv
@@ -123,3 +137,5 @@ homeassistant:
       friendly_name: "Gewitterwarnung"
     sensor.gewitterwarnung_status:
       friendly_name: "Gewitterwarnung Status"
+    binary_sensor.entwarnung:
+      friendly_name: "Entwarnung"
