@@ -1,0 +1,45 @@
+# Lovelace Dashboard-Vorlage fuer Gewitterwarner GW1
+#
+# Diese Datei ist eine Vorlage. Je nach Home-Assistant-Version kann das Dashboard
+# ueber die UI oder als YAML-Dashboard eingebunden werden.
+
+title: Gewitter
+path: gewitter
+icon: mdi:weather-lightning
+cards:
+  - type: entities
+    title: Gewitterwarner GW1
+    show_header_toggle: false
+    entities:
+      - entity: binary_sensor.gewitterwarnung
+        name: Warnung
+      - entity: sensor.gewitterwarnung_status
+        name: Status
+      - entity: sensor.gewitterwarnung_letzte_aenderung
+        name: Letzte Aenderung
+      - type: divider
+      - entity: binary_sensor.gw1_shelly_uni_input_0
+        name: Shelly Eingang 1 roh
+      - entity: binary_sensor.gw1_shelly_uni_input_1
+        name: Shelly Eingang 2 roh
+      - entity: sensor.gewitterwarner_impulse
+        name: Impulse
+      - entity: sensor.gewitterwarner_impulsfrequenz
+        name: Impulsfrequenz
+
+  - type: glance
+    title: Shelly UNI
+    entities:
+      - entity: device_tracker.gw1_shelly_uni
+        name: Online
+      - entity: update.gw1_shelly_uni_firmware
+        name: Firmware
+      - entity: switch.gw1_shelly_uni_internet_access
+        name: Internetzugang
+
+  - type: markdown
+    title: Hinweise
+    content: >-
+      Ersetze die anonymisierten Entity-Platzhalter durch deine lokalen
+      Home-Assistant-Entity-IDs. Pruefe danach, ob die Logik des GW1-Eingangs
+      invertiert werden muss.

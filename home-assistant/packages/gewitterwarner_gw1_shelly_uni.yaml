@@ -1,0 +1,125 @@
+# Home Assistant package: Gewitterwarner GW1 ueber Shelly UNI
+#
+# Vor der Nutzung die Platzhalter durch echte lokale Entity-IDs ersetzen:
+# - binary_sensor.gw1_shelly_uni_input_0
+# - binary_sensor.gw1_shelly_uni_input_1
+# - sensor.gw1_shelly_uni_pulse_counter
+# - sensor.gw1_shelly_uni_pulse_frequency
+# - notify.mobile_app_your_phone
+#
+# Wichtig: Pruefen, ob die GW1-Logik invertiert werden muss.
+
+template:
+  - binary_sensor:
+      - name: "Gewitterwarnung"
+        unique_id: gewitterwarner_gw1_warnung
+        device_class: safety
+        state: "{{ is_state('binary_sensor.gw1_shelly_uni_input_0', 'on') }}"
+        icon: >-
+          {% if is_state('binary_sensor.gw1_shelly_uni_input_0', 'on') %}
+            mdi:weather-lightning
+          {% else %}
+            mdi:weather-lightning-rainy
+          {% endif %}
+        attributes:
+          quelle: "Gewitterwarner GW1 via Shelly UNI"
+          raw_input_entity: "binary_sensor.gw1_shelly_uni_input_0"
+
+      - name: "Gewitterwarner zweiter Eingang"
+        unique_id: gewitterwarner_gw1_input_2
+        device_class: safety
+        state: "{{ is_state('binary_sensor.gw1_shelly_uni_input_1', 'on') }}"
+        icon: mdi:electric-switch
+        attributes:
+          quelle: "Shelly UNI Eingang 2"
+          raw_input_entity: "binary_sensor.gw1_shelly_uni_input_1"
+
+  - sensor:
+      - name: "Gewitterwarnung Status"
+        unique_id: gewitterwarner_gw1_status
+        state: >-
+          {% if is_state('binary_sensor.gewitterwarnung', 'on') %}
+            Warnung aktiv
+          {% elif is_state('binary_sensor.gewitterwarnung', 'off') %}
+            Keine Warnung
+          {% else %}
+            Unbekannt
+          {% endif %}
+        icon: >-
+          {% if is_state('binary_sensor.gewitterwarnung', 'on') %}
+            mdi:alert
+          {% else %}
+            mdi:shield-check
+          {% endif %}
+
+      - name: "Gewitterwarnung letzte Aenderung"
+        unique_id: gewitterwarner_gw1_letzte_aenderung
+        state: >-
+          {% set entity = states.binary_sensor.gewitterwarnung %}
+          {% if entity is not none %}
+            {{ as_timestamp(entity.last_changed) | timestamp_custom('%d.%m.%Y %H:%M:%S') }}
+          {% else %}
+            unbekannt
+          {% endif %}
+        icon: mdi:clock-outline
+
+      - name: "Gewitterwarner Impulse"
+        unique_id: gewitterwarner_gw1_impulse
+        state: "{{ states('sensor.gw1_shelly_uni_pulse_counter') }}"
+        unit_of_measurement: "pulse"
+        icon: mdi:counter
+
+      - name: "Gewitterwarner Impulsfrequenz"
+        unique_id: gewitterwarner_gw1_impulsfrequenz
+        state: "{{ states('sensor.gw1_shelly_uni_pulse_frequency') }}"
+        unit_of_measurement: "Hz"
+        icon: mdi:sine-wave
+
+automation:
+  - id: gewitterwarner_gw1_warnung_aktiv
+    alias: "Gewitterwarner GW1 - Warnung aktiv"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.gewitterwarnung
+        to: "on"
+    action:
+      - service: persistent_notification.create
+        data:
+          title: "Gewitterwarnung aktiv"
+          message: "Der Gewitterwarner GW1 meldet eine aktive Warnung."
+          notification_id: gewitterwarner_gw1_warnung
+      # Optional: Smartphone-Benachrichtigung aktivieren und Platzhalter ersetzen.
+      # - service: notify.mobile_app_your_phone
+      #   data:
+      #     title: "Gewitterwarnung aktiv"
+      #     message: "Der GW1 meldet eine aktive Warnung."
+
+  - id: gewitterwarner_gw1_warnung_ende
+    alias: "Gewitterwarner GW1 - Warnung beendet"
+    mode: single
+    trigger:
+      - platform: state
+        entity_id: binary_sensor.gewitterwarnung
+        to: "off"
+    action:
+      - service: persistent_notification.dismiss
+        data:
+          notification_id: gewitterwarner_gw1_warnung
+      - service: persistent_notification.create
+        data:
+          title: "Gewitterwarnung beendet"
+          message: "Der Gewitterwarner GW1 meldet keine aktive Warnung mehr."
+          notification_id: gewitterwarner_gw1_warnung_ende
+      # Optional: Smartphone-Benachrichtigung aktivieren und Platzhalter ersetzen.
+      # - service: notify.mobile_app_your_phone
+      #   data:
+      #     title: "Gewitterwarnung beendet"
+      #     message: "Der GW1 meldet keine aktive Warnung mehr."
+
+homeassistant:
+  customize:
+    binary_sensor.gewitterwarnung:
+      friendly_name: "Gewitterwarnung"
+    sensor.gewitterwarnung_status:
+      friendly_name: "Gewitterwarnung Status"

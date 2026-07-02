@@ -1,0 +1,19 @@
+# Home Assistant local/runtime files
+*.db
+*.db-*
+*.log
+*.log.*
+*.tar
+*.tar.gz
+*.zip
+.storage/
+secrets.yaml
+known_devices.yaml
+home-assistant_v2.db*
+local/
+*.private.md
+*.private.yaml
+
+# macOS/editor noise
+.DS_Store
+.vscode/
