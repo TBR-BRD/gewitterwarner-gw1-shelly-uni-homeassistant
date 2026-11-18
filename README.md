@@ -10,6 +10,12 @@ Home-Assistant-Dashboard:
 http://<HA-IP>:8123/dashboard-gewitter/gewitter
 ```
 
+<br>
+<a href="https://www.buymeacoffee.com/thoralf.brandt" target="_blank">
+  <img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174">
+</a>
+<br>
+
 ## Ziel
 
 - GW1-Schaltausgänge über Shelly UNI erfassen
