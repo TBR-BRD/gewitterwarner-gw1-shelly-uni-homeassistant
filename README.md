@@ -1,5 +1,7 @@
 # Gewitterwarner GW1 + Shelly UNI + Home Assistant
 
+🇩🇪 Deutsch · [🇬🇧 English](README_EN.md)
+
 Dieses Projekt dokumentiert die Einbindung eines **Gewitterwarners GW1** über einen **Shelly UNI** in **Home Assistant**.
 
 Home-Assistant-Dashboard:
